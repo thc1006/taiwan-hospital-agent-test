@@ -1,18 +1,19 @@
-SHELL := /bin/bash
+.PHONY: bootstrap dev test lint demo render
 
-.PHONY: init demo_free5gc demo_nephio demo_prom demo_otel
+bootstrap:
+	python -m venv .venv && source .venv/bin/activate && pip install -U pip && pip install fastapi uvicorn boto3 pydantic pytest graphviz
 
-init:
-	bash scripts/bootstrap_git.sh
+dev:
+	uvicorn services.api.main:app --reload --port 8000
 
-demo_free5gc:
-	bash scripts/repro_free5gc_oauth2.sh
+test:
+	pytest -q
 
-demo_nephio:
-	bash scripts/repro_nephio_backstage.sh
+lint:
+	@echo "Add linting commands (e.g. ruff, mypy) here"
 
-demo_prom:
-	bash scripts/demo_prometheus_multidoc.sh
+demo:
+	bash scripts/local_demo.sh
 
-demo_otel:
-	bash scripts/demo_otlp_ruby_default.sh
+render:
+	python scripts/render_arch.py
